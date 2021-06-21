@@ -1,4 +1,7 @@
-# created by virtualenv automatically
+# Compiled files
+alivio/alivio/__pycache__/
+
+# Virtual Env
 Lib/
 Scripts/
 *.cfg
