@@ -1,8 +1,9 @@
 # Compiled files
-alivio/alivio/__pycache__/
+# alivio/alivio/__pycache__/
 
 # Virtual Env
 Lib/
 Scripts/
 *.cfg
 .vscode/
+**/__pycache__/
