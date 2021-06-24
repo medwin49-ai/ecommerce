@@ -5,3 +5,4 @@ alivio/alivio/__pycache__/
 Lib/
 Scripts/
 *.cfg
+.vscode/
