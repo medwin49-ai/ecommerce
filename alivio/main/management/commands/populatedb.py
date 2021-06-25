@@ -44,7 +44,6 @@ class Command(BaseCommand):
                 potency_value = values[1]
                 price = values[2]
                 supply = values[3]
-                print(line)
                 p = Potency(product=product, potency_value=potency_value, price=price, supply=supply)
                 p.save()   
                 self.stdout.write(self.style.SUCCESS('Successfully added "%s"' % line))   
