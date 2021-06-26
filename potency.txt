@@ -1,0 +1,2 @@
+product_id,potency_value,price,supply
+product_id_2,potency_value_2,price_2,supply_2
