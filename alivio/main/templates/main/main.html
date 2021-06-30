@@ -1,0 +1,65 @@
+{% extends "base.html" %}
+
+{% load static %}
+
+{% block content %}
+<link rel="stylesheet" href="{% static 'main/index.css' %}"/>
+
+
+<div class= "banner-container">
+	<div class="bg-image hover-zoom">
+	    <img src="{% static 'main/banner.jpg' %}" alt="banner" width="100%">
+    </div>
+    <div class= "centered-banner">Welcome to Alivio</div>
+    <div class= "belowcenter-banner"> Customers don't just want to shop: they want to feel that the brand understands them.</div>
+</div>
+
+<div class= "Featured">
+	<h3 style="font-size: xxx-large; letter-spacing: 5px;">FEATURED PRODUCTS</h3>
+	<p style="font-size: x-large; opacity: 40%; letter-spacing: 5px;">BEST FROM THE BEST</p>
+</div>
+
+<div class= "list-container col-lg-3 col-md-4 col-sm-6 col-xs-12" style="width: 100%">   
+    
+    <div class = "row">
+        
+        <div class="col-lg-3 col-md-4 col-sm-6 col-xs-12">
+            <div class="hovereffect">
+                <img class="img-responsive img-thumbnail" src="{% static 'main/1.jpg' %}" alt="">
+                <div class="overlay">
+                    <h2>Effect 13</h2>
+                    <p>
+                        <a href="#">LINK HERE</a>
+                    </p>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-lg-3 col-md-4 col-sm-6 col-xs-12">
+        <div class="hovereffect">
+            <img class="img-responsive img-thumbnail" src="{% static 'main/1.jpg' %}" alt="">
+            <div class="overlay">
+                <h2>Effect 13</h2>
+                <p>
+                    <a href="#">LINK HERE</a>
+                </p>
+            </div>
+        </div>
+        </div>
+
+        <div class="col-lg-3 col-md-4 col-sm-6 col-xs-12">
+            <div class="hovereffect">
+                <img class="img-responsive  img-thumbnail" src="{% static 'main/1.jpg' %}" alt="">
+                <div class="overlay">
+                    <h2>Effect 13</h2>
+                    <p>
+                        <a href="#">LINK HERE</a>
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+      
+{% endblock %}
+
