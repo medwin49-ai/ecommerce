@@ -5,61 +5,81 @@
 {% block content %}
 <link rel="stylesheet" href="{% static 'main/index.css' %}"/>
 
-
-<div class= "banner-container">
+<div class="banner-container">
 	<div class="bg-image hover-zoom">
 	    <img src="{% static 'main/banner.jpg' %}" alt="banner" width="100%">
     </div>
-    <div class= "centered-banner">Welcome to Alivio</div>
-    <div class= "belowcenter-banner"> Customers don't just want to shop: they want to feel that the brand understands them.</div>
+    <div class="centered-banner">Welcome to Alivio</div>
+    <div class="belowcenter-banner"> Customers don't just want to shop: they want to feel that the brand understands them.</div>
 </div>
 
-<div class= "Featured">
+<div class="Featured">
 	<h3 style="font-size: xxx-large; letter-spacing: 5px;">FEATURED PRODUCTS</h3>
 	<p style="font-size: x-large; opacity: 40%; letter-spacing: 5px;">BEST FROM THE BEST</p>
 </div>
 
-<div class= "list-container col-lg-3 col-md-4 col-sm-6 col-xs-12" style="width: 100%">   
-    
-    <div class = "row">
-        
-        <div class="col-lg-3 col-md-4 col-sm-6 col-xs-12">
-            <div class="hovereffect">
-                <img class="img-responsive img-thumbnail" src="{% static 'main/1.jpg' %}" alt="">
-                <div class="overlay">
-                    <h2>Effect 13</h2>
-                    <p>
-                        <a href="#">LINK HERE</a>
-                    </p>
+<div class="list-container col-lg-3 col-md-4 col-sm-6 col-xs-12" style="width: 100%">   
+
+    {% for product, potencies in products %}
+   
+        {% comment %} 
+        Create a new row if current row already has three products. 
+        DO NOT close row since the new row can have more products.   
+        {% endcomment %}
+
+        {% if forloop.counter0|divisibleby:"2" %}
+            
+            <div class="row">
+                
+                <div class="col-lg-3 col-md-4 col-sm-6 col-xs-12">
+                    <div class="hovereffect">
+                        <a class="product-page" href="{{ product.id }}">
+                            <img class="img-responsive img-thumbnail" src="{% static 'main/1.jpg' %}" alt="" style="border: 0px none;">
+                            <div class="overlay">
+                                {% with potencies|last as last_potency %}
+                                    <h2>{{ product.product_name }}</h2>
+                                    <p> 
+                                        ${{ potencies.0.price }} - ${{ last_potency.price }}
+                                        <br>
+                                        {{ potencies.0.potency_value }}mg - {{ last_potency.potency_value }}mg
+                                    </p>
+                                    <a href="shopping-cart/{{ product.id }}" class="btn btn-light product-add-to-cart" role="button">Add to Cart</a>
+                                {% endwith %}
+                            </div>
+                        </a>    
+                    </div>
+                </div>
+
+        {% comment %} Add product to current row {% endcomment %}
+        {% else %}
+
+            <div class="col-lg-3 col-md-4 col-sm-6 col-xs-12">
+                <div class="hovereffect">
+                    <a class="product-page" href="{{ product.id }}">
+                        <img class="img-responsive img-thumbnail" src="{% static 'main/1.jpg' %}" alt="" style="border: 0px none;">
+                        <div class="overlay">
+                            {% with potencies|last as last_potency %}
+                                <h2>{{ product.product_name }}</h2>
+                                <p> 
+                                    ${{ potencies.0.price }} - ${{ last_potency.price }}
+                                    <br>
+                                    {{ potencies.0.potency_value }}mg - {{ last_potency.potency_value }}mg
+                                </p>
+                                <a href="shopping-cart/{{ product.id }}" class="btn btn-light product-add-to-cart" role="button">Add to Cart</a>
+                            {% endwith %}    
+                        </div>
+                    </a>    
                 </div>
             </div>
-        </div>
 
-        <div class="col-lg-3 col-md-4 col-sm-6 col-xs-12">
-        <div class="hovereffect">
-            <img class="img-responsive img-thumbnail" src="{% static 'main/1.jpg' %}" alt="">
-            <div class="overlay">
-                <h2>Effect 13</h2>
-                <p>
-                    <a href="#">LINK HERE</a>
-                </p>
-            </div>
-        </div>
-        </div>
+        {% endif %}    
 
-        <div class="col-lg-3 col-md-4 col-sm-6 col-xs-12">
-            <div class="hovereffect">
-                <img class="img-responsive  img-thumbnail" src="{% static 'main/1.jpg' %}" alt="">
-                <div class="overlay">
-                    <h2>Effect 13</h2>
-                    <p>
-                        <a href="#">LINK HERE</a>
-                    </p>
-                </div>
-            </div>
-        </div>
-    </div>
+        {% comment %} product so close {% endcomment %}
+        {% if forloop.last %}
+            
+            </div> 
+
+        {% endif %}    
+    {% endfor %}
 </div>
-      
 {% endblock %}
-
