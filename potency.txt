@@ -1,2 +1,7 @@
-product_id,potency_value,price,supply
-product_id_2,potency_value_2,price_2,supply_2
+1,300,1.00,100
+1,500,2.00,100
+1,700,3.00,100
+1,1000,4.00,100
+2,300,1.00,100
+2,500,2.00,100
+2,700,3.00,100
