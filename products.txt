@@ -1,2 +1,2 @@
-product_name,product_description
-product_name_2,product_description_2
+bottle,bottle cbd
+cream,cream cbd
