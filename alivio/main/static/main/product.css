@@ -1,0 +1,42 @@
+body{
+    background-color: white
+}
+
+
+.product_container{
+    position: relative;
+    display: flex;
+    width: 100%;
+    margin-bottom: 10%;
+    margin-top: 10%;
+    margin-left: 30%;
+}
+
+.product_information{
+    position: relative;
+    margin-left: 5%;
+}
+
+.product_information p{
+    position: relative;
+    margin-top:10% ;
+}
+
+.button_container{
+  display: flex;
+}
+
+#tentacles{
+  position: relative;
+  margin-left: 10%;
+}
+
+#cart_button{
+margin-left: 10% ;
+}
+
+.related_products{
+  position: relative;
+  margin-top: 10%;
+  text-align: center;
+}

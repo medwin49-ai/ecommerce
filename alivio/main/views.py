@@ -13,3 +13,8 @@ def index(response):
         potencies.append(p)
 
     return render(response, "main/main.html", {'products': zip(products, potencies)})
+
+
+def product_page(response):
+    return render(response, "main/product.html", {})
+
