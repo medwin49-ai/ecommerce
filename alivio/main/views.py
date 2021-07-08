@@ -1,4 +1,4 @@
-from django.shortcuts import render
+from django.shortcuts import get_list_or_404, get_object_or_404, render
 from django.http import HttpResponse
 
 from .models import Potency, Product
@@ -15,6 +15,8 @@ def index(response):
     return render(response, "main/main.html", {'products': zip(products, potencies)})
 
 
-def product_page(response):
-    return render(response, "main/product.html", {})
+def product_page(response , product_name):
+        product = get_object_or_404(Product , product_name=product_name)
+        potencies = get_list_or_404(Potency , product_id = product.id )
+        return render(response, "main/product.html", {'product': product, 'potencies': potencies})
 
