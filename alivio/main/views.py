@@ -20,3 +20,6 @@ def product_page(response , product_name):
         potencies = get_list_or_404(Potency , product_id = product.id )
         return render(response, "main/product.html", {'product': product, 'potencies': potencies})
 
+
+def shopping_cart_page(response):
+    return render(response, "main/shopping-cart.html", {})

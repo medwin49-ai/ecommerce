@@ -1,0 +1,11 @@
+.delete-icon-link {
+    color: blue;
+}
+
+.delete-icon-link:hover {
+    color: red;
+}
+
+.continue-shopping {
+    margin-left: 15px;
+}
