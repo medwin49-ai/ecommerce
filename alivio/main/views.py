@@ -18,3 +18,6 @@ def index(response):
 def product_page(response):
     return render(response, "main/product.html", {})
 
+
+def shopping_cart_page(response):
+    return render(response, "main/shopping-cart.html", {})
