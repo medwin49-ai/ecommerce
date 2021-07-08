@@ -33,7 +33,7 @@
                 
                 <div class="col-lg-3 col-md-4 col-sm-6 col-xs-12">
                     <div class="hovereffect">
-                        <a class="product-page" href="{{ product.id }}">
+                        <a class="product-page" href="{% url 'products' product.product_name %}">
                             <img class="img-responsive img-thumbnail" src="{% static 'main/1.jpg' %}" alt="" style="border: 0px none;">
                             <div class="overlay">
                                 {% with potencies|last as last_potency %}
@@ -55,7 +55,7 @@
 
             <div class="col-lg-3 col-md-4 col-sm-6 col-xs-12">
                 <div class="hovereffect">
-                    <a class="product-page" href="{{ product.id }}">
+                    <a class="product-page" href="{% url 'products' product.product_name %}">
                         <img class="img-responsive img-thumbnail" src="{% static 'main/1.jpg' %}" alt="" style="border: 0px none;">
                         <div class="overlay">
                             {% with potencies|last as last_potency %}
