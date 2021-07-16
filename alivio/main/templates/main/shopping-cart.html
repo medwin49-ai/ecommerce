@@ -23,22 +23,26 @@
 
             <tbody>
                 {% for item in order.orderitem_set.all %}
-                <tr>
-                    <td><img class="img-fluid" src="{% static 'main/1.jpg' %}" alt="" style="border: 0px none;" width="50px">{{item.potency.product.product_name|title}} - {{item.potency.potency_value}}mg </td>
-                    <td>${{item.potency.price|floatformat:2}}</td>
-                    <td>
-                        <i class="fas fa-minus" style="margin-right: 7px;"></i>
-                        {{item.quantity}}
-                        <i class="fas fa-plus" style="margin-left: 7px;"></i>
-                    </td>
-                    <td>
-                        ${{item.get_total|floatformat:2}}    
-                        <a class="delete-icon-link" href="#">
-                            <i class="fas fa-trash fa-lg" style="float: right;"></i>
-                        </a>
-                    </td>
-                </tr>
+                    <tr>
+                        <td><img class="img-fluid" src="{% static 'main/1.jpg' %}" alt="" style="border: 0px none;" width="50px">{{ item.potency.product.product_name|title }} - {{ item.potency.potency_value }}mg </td>
+                        <td>${{ item.potency.price|floatformat:2 }}</td>
+                        <td>
+                            <i class="fas fa-minus" style="margin-right: 7px;"></i>
+                            {{ item.quantity }}
+                            <i class="fas fa-plus" style="margin-left: 7px;"></i>
+                        </td>
+                        <td>
+                            ${{ item.get_total|floatformat:2 }}    
+                            <a class="delete-icon-link" href="#">
+                                <i class="fas fa-trash fa-lg" style="float: right;"></i>
+                            </a>
+                        </td>
+                    </tr>
                 {% endfor %}
+                <tr>
+                    <td colspan="3"><b>Order Total</b></td>
+                    <td><b>${{ order.get_cart_total }}</b></td>
+                </tr>
                 <tr>
                     <td colspan="5">
                         <a class="checkout btn btn-warning float-right ml-4" href='/checkout/' role="button">Proceed to checkout</a>
