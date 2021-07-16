@@ -1,7 +1,7 @@
-from django.shortcuts import get_list_or_404, get_object_or_404, render
-from django.http import HttpResponse
-
-from .models import Potency, Product
+from django.shortcuts import get_list_or_404, get_object_or_404, render, redirect ,reverse
+from django.http import HttpResponse ,  HttpResponseRedirect
+from .models import *
+from .forms import CartForm
 
 
 def index(response):
@@ -15,11 +15,43 @@ def index(response):
     return render(response, "main/main.html", {'products': zip(products, potencies)})
 
 
-def product_page(response , product_name):
-        product = get_object_or_404(Product , product_name=product_name)
-        potencies = get_list_or_404(Potency , product_id = product.id )
-        return render(response, "main/product.html", {'product': product, 'potencies': potencies})
+def product(request, product_name):
+    product = get_object_or_404(Product , product_name=product_name)
+    potencies = get_list_or_404(Potency , product_id = product.id )
+    
+    form = CartForm(request.POST)
+
+    Choices = []
+    for i in potencies:
+        add_tuple=(i.id , str(i.potency_value) + "mg")
+        Choices.append(add_tuple)
+
+    form.fields["potency"].choices = Choices 
+    if request.method == 'POST':
+        if form.is_valid():
+            device = request.COOKIES['device']
+            customer, created = Customer.objects.get_or_create(device=device)
+            order, created = Order.objects.get_or_create(customer=customer, complete=False)   
+            potency = form.cleaned_data['potency']
+            quantities = form.cleaned_data['quantity']
+            
+            potency = Potency.objects.get(id=potency)
+           
+            orderItem, created = OrderItem.objects.get_or_create(order = order , potency = potency)
+            orderItem.quantity = quantities
+            orderItem.save()
+            return HttpResponseRedirect('/shopping-cart')
+        else:
+            form = CartForm()
+    
+    return render(request, "main/product.html", { 'form':form, 'product': product, 'potencies': potencies,})
 
 
 def shopping_cart_page(response):
-    return render(response, "main/shopping-cart.html", {})
+   device = response.COOKIES['device']
+   customer, created = Customer.objects.get_or_create(device=device)
+
+   order, created = Order.objects.get_or_create(customer=customer, complete=False)
+
+   return render(response, 'main/shopping-cart.html', {'order':order})
+

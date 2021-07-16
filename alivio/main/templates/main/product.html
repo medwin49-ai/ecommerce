@@ -17,15 +17,11 @@
             <p id = "potency_price">Price: ${{potencies.0.price}}</p>
             <p>This is a simple product.</p>
             <div class="button_container">
-                <div class="dropdown">         
-                  <select class="price_select" id="selectBox"aria-label="Default select example"  style="width: 150px; height: 50px;" onchange=" product_price()">
-                        {% for i in potencies %}
-                        <option value="{{i.price}}" style="width: 100px">{{i.potency_value}}mg</option>
-                        {% endfor %}
-                  </select>                   
-                </div>    
-                <input type="number" id="product_amount" name="product_amount" min="1" max="15" ><br/>
-                <button type="button" id="cart_button"class="btn btn-dark text-center col-md-3" >Add to cart</button>
+                  <form action="" method="POST">
+                      {% csrf_token %}
+                      {{form}}                    
+                  <input type="submit" value="Submit" class = "btn btn-secondary">
+                  </form>
             </div>
             <p>Ingredients: {{product.ingredient_name}} </p>
         </div>

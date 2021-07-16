@@ -26,17 +26,55 @@
     
 </head>
 <body>
+	<script type="text/javascript">
+
+		function getCookie(name) {
+		    var cookieValue = null;
+		    if (document.cookie && document.cookie !== '') {
+		        var cookies = document.cookie.split(';');
+		        for (var i = 0; i < cookies.length; i++) {
+		            var cookie = cookies[i].trim();
+		            // Does this cookie string begin with the name we want?
+		            if (cookie.substring(0, name.length + 1) === (name + '=')) {
+		                cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+		                break;
+		            }
+		        }
+		    }
+		    return cookieValue;
+		}
+
+
+		function uuidv4() {
+		  return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {
+		    var r = Math.random() * 16 | 0, v = c == 'x' ? r : (r & 0x3 | 0x8);
+		    return v.toString(16);
+		  });
+		}
+
+
+
+
+		let device = getCookie('device')
+
+		if (device == null || device == undefined){
+			device = uuidv4()
+		}
+
+		document.cookie ='device=' + device + ";domain=;path=/"
+
+	</script>
 
 	<nav class="navbar navbar-expand-lg navbar-light bg-light">
 		<div class="container-fluid">
-			<a class="navbar-brand" href="#">Alivio</a>
+			<a class="navbar-brand" href="{% url 'index' %}">Alivio</a>
 			<button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
 				<span class="navbar-toggler-icon"></span>
 			</button>
 			<div class="collapse navbar-collapse" id="navbarSupportedContent">
 				<ul class="navbar-nav ms-auto mb-2 mb-lg-0">
 					<li class="nav-item">
-						<a class="nav-link active h7" aria-current="page" href="#">Home</a>
+						<a class="nav-link active h7" aria-current="page" href="{% url 'index' %}">Home</a>
 					</li>
 					<li class="nav-item">
 						<a class="nav-link text-dark h7" href="#">About</a>
@@ -48,7 +86,7 @@
 						<a class="nav-link text-dark h7" href="#">Contact</a>
 					</li>
 					<li class="nav-item">
-						<a class="nav-link text-dark h7" href="#">
+						<a class="nav-link text-dark h7" href="{% url 'shopping-cart'%}">
 							Cart <i class="fas fa-shopping-cart fa-lg"></i>
 						</a>
 					</li>
