@@ -56,7 +56,7 @@ def shopping_cart_page(response):
     if response.method == "POST":
         
         form = CartQuantityItem(response.POST)
-
+    
         if form.is_valid():        
            
             quantity_delta = form.cleaned_data['btn']
@@ -72,13 +72,15 @@ def shopping_cart_page(response):
                 return HttpResponseRedirect('/shopping-cart')
     
         delete_form = DeleteButton(response.POST)
-       
+        
+        print(delete_form)
         if delete_form.is_valid(): 
             potency = form.cleaned_data['potency']
             order_item, created = OrderItem.objects.get_or_create(order = order , potency = potency)
             order_item.delete()
-
+            
             return HttpResponseRedirect('/shopping-cart')
+
         else:
             form = CartQuantityItem()
             delete_form = DeleteButton()
