@@ -17,17 +17,17 @@ def index(response):
 
 def product(request, product_name):
     product = get_object_or_404(Product , product_name=product_name)
-    potencies = get_list_or_404(Potency , product_id = product.id )
+    potencies = get_list_or_404(Potency , product_id = product.id ) 
     
-    form = CartForm(request.POST)
-
-    Choices = []
+    choices = []
     for i in potencies:
-        add_tuple=(i.id , str(i.potency_value) + "mg")
-        Choices.append(add_tuple)
+        add_tuple = (i.id , str(i.potency_value) + "mg")
+        choices.append(add_tuple)
 
-    form.fields["potency"].choices = Choices 
     if request.method == 'POST':
+        form = CartForm(request.POST)
+        form.fields["potency"].choices = choices
+
         if form.is_valid():
             device = request.COOKIES['device']
             customer, created = Customer.objects.get_or_create(device=device)
@@ -40,11 +40,16 @@ def product(request, product_name):
             orderItem, created = OrderItem.objects.get_or_create(order = order , potency = potency)
             orderItem.quantity = quantities
             orderItem.save()
+            
             return HttpResponseRedirect('/shopping-cart')
         else:
             form = CartForm()
-    
-    return render(request, "main/product.html", { 'form':form, 'product': product, 'potencies': potencies,})
+            form.fields["potency"].choices = choices    
+
+    else:
+        form = CartForm()
+        form.fields["potency"].choices = choices
+        return render(request, "main/product.html", { 'form':form, 'product': product, 'potencies': potencies,})
 
 
 def shopping_cart_page(response):
