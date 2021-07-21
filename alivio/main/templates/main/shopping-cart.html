@@ -11,7 +11,7 @@
     <div class="table-responsive text-nowrap">
         <h2 class="text-center">Order Summary</h2>
         <br>
-        <table class="table">
+        <table class="table" style="border: none">
             <thead>
                 <tr>
                     <th scope="col">Product</th>
@@ -23,21 +23,33 @@
 
             <tbody>
                 {% for item in order.orderitem_set.all %}
-                    <tr>
-                        <td><img class="img-fluid" src="{% static 'main/1.jpg' %}" alt="" style="border: 0px none;" width="50px">{{ item.potency.product.product_name|title }} - {{ item.potency.potency_value }}mg </td>
-                        <td>${{ item.potency.price|floatformat:2 }}</td>
-                        <td>
-                            <i class="fas fa-minus" style="margin-right: 7px;"></i>
-                            {{ item.quantity }}
-                            <i class="fas fa-plus" style="margin-left: 7px;"></i>
-                        </td>
-                        <td>
-                            ${{ item.get_total|floatformat:2 }}    
-                            <a class="delete-icon-link" href="#">
-                                <i class="fas fa-trash fa-lg" style="float: right;"></i>
-                            </a>
-                        </td>
-                    </tr>
+                <tr>
+                    <td><img class="img-fluid" src="{% static 'main/1.jpg' %}" alt="" style="border: 0px none;" width="50px">{{ item.potency.product.product_name|title }} - {{ item.potency.potency_value }}mg</td>
+                    <td>${{ item.potency.price|floatformat:2 }}</td>
+                    <td>
+                        
+                        <form name= "form" method="post">
+                            {% csrf_token %}
+                            <input type="hidden" value="{{ item.potency.id }}" name="potency">
+                            <button type="submit" value= "-1" class="fas fa-minus"  name="btn"style="margin-right: 7px; padding: 0; border: none; background: none;"></button>
+                                {{ item.quantity }}
+                            <button type="submit" value="1" class="fas fa-plus" name="btn" style="margin-left: 7px; padding: 0; border: none; background: none;"></button>
+                        </form>
+                    
+                    </td>
+                    <td>
+                        ${{ item.get_total|floatformat:2 }}      
+                        <a class="delete-icon-link">
+
+                            <form name="delete"  method="post">   
+                                {% csrf_token %}
+                                <input type="hidden" value="{{ item.potency.id }}" name="potency">
+                                <button type="submit" class="fas fa-trash fa-lg" value="Submit" style="float: right;  border: none; background: none;"></button>
+                            </form>
+                        
+                        </a>
+                    </td>
+                </tr>
                 {% endfor %}
                 <tr>
                     <td colspan="3"><b>Order Total</b></td>
@@ -46,7 +58,7 @@
                 <tr>
                     <td colspan="5">
                         <a class="checkout btn btn-warning float-right ml-4" href='/checkout/' role="button">Proceed to checkout</a>
-                        <a class="continue-shopping btn btn-primary float-right ml-4" href='/' role="button">Continue shopping</a>
+                        <a class="continue-shopping btn btn-primary float-right ml-4" href="{% url 'index' %}" role="button">Continue shopping</a>
                     </td>
                 </tr>
             </tbody>

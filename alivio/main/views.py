@@ -1,7 +1,7 @@
 from django.shortcuts import get_list_or_404, get_object_or_404, render, redirect ,reverse
 from django.http import HttpResponse ,  HttpResponseRedirect
 from .models import *
-from .forms import CartForm
+from .forms import CartForm , CartQuantityItem , DeleteButton
 
 
 def index(response):
@@ -53,10 +53,48 @@ def product(request, product_name):
 
 
 def shopping_cart_page(response):
-   device = response.COOKIES['device']
-   customer, created = Customer.objects.get_or_create(device=device)
+    
+    device = response.COOKIES['device']
+    customer, created = Customer.objects.get_or_create(device=device)
+    order, created = Order.objects.get_or_create(customer=customer, complete=False)
+    
+    if response.method == "POST":
+        
+        form = CartQuantityItem(response.POST)
+    
+        if form.is_valid():        
+           
+            quantity_delta = form.cleaned_data['btn']
+            potency = form.cleaned_data['potency']
+            order_item, created = OrderItem.objects.get_or_create(order = order , potency = potency)
+                      
+            if order_item.quantity + quantity_delta  == 0:
+                return HttpResponseRedirect('/shopping-cart')
+            
+            else:
+                order_item.quantity = order_item.quantity + quantity_delta
+                order_item.save()
+                return HttpResponseRedirect('/shopping-cart')
+    
+        delete_form = DeleteButton(response.POST)
+        
+        print(delete_form)
+        if delete_form.is_valid(): 
+            potency = form.cleaned_data['potency']
+            order_item, created = OrderItem.objects.get_or_create(order = order , potency = potency)
+            order_item.delete()
+            
+            return HttpResponseRedirect('/shopping-cart')
 
-   order, created = Order.objects.get_or_create(customer=customer, complete=False)
+        else:
+            form = CartQuantityItem()
+            delete_form = DeleteButton()
+        
+    else:
+        form = CartQuantityItem()
+        delete_form = DeleteButton()
+    
+        
+    return render(response, 'main/shopping-cart.html', {'order' : order , 'form' : form , 'delete_form' : delete_form, })
 
-   return render(response, 'main/shopping-cart.html', {'order':order})
 

@@ -7,3 +7,10 @@ class CartForm(forms.Form):
     quantity = forms.IntegerField(max_value=20 , min_value=1, initial=1)
     potency.widget.attrs.update({'class':'form-control mb-3'})
     quantity.widget.attrs.update({'class': 'form-control mb-3'})
+
+class CartQuantityItem(forms.Form):
+    potency = forms.IntegerField()
+    btn = forms.IntegerField()
+
+class DeleteButton(forms.Form):
+    potency = forms.IntegerField()
