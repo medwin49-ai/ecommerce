@@ -98,3 +98,10 @@ def shopping_cart_page(response):
     return render(response, 'main/shopping-cart.html', {'order' : order , 'form' : form , 'delete_form' : delete_form, })
 
 
+def checkout_page(response):
+    device = response.COOKIES['device']
+    customer, created = Customer.objects.get_or_create(device=device)
+    order, created = Order.objects.get_or_create(customer=customer, complete=False)
+
+        
+    return render(response, 'main/checkout.html', {'order' : order , })
