@@ -1,10 +1,10 @@
 from django.shortcuts import get_list_or_404, get_object_or_404, render, redirect ,reverse
 from django.http import HttpResponse ,  HttpResponseRedirect
 from .models import *
-from .forms import CartForm , CartQuantityItem , DeleteButton
+from .forms import CartForm, CartQuantityItem, DeleteButton, HomeCartForm
 
 
-def index(response):
+def index(request):
     products = Product.objects.all()
     potencies = []
 
@@ -12,7 +12,32 @@ def index(response):
         p = list(Potency.objects.filter(product_id=product.id).order_by('potency_value'))
         potencies.append(p)
 
-    return render(response, "main/main.html", {'products': zip(products, potencies)})
+    return render(request, "main/main.html", {'products': zip(products, potencies)})
+
+
+def add_to_cart_from_home(request):
+    if request.method == "POST":
+        form = HomeCartForm(request.POST)
+        print("in form")
+        if form.is_valid():
+            print("form was valid")
+            device = request.COOKIES['device']
+            customer, created = Customer.objects.get_or_create(device=device)
+            order, created = Order.objects.get_or_create(customer=customer, complete=False)   
+            potency = form.cleaned_data['potency']
+            print("potency", 1)
+            quantity = 1
+            
+            potency = Potency.objects.get(id=potency)
+           
+            orderItem, created = OrderItem.objects.get_or_create(order = order , potency = potency)
+            orderItem.quantity = quantity
+            orderItem.save()
+            return HttpResponseRedirect("/shopping-cart")
+        else:
+            return HttpResponseRedirect("")
+
+    return HttpResponseRedirect("")
 
 
 def product(request, product_name):
@@ -78,7 +103,6 @@ def shopping_cart_page(response):
     
         delete_form = DeleteButton(response.POST)
         
-        print(delete_form)
         if delete_form.is_valid(): 
             potency = form.cleaned_data['potency']
             order_item, created = OrderItem.objects.get_or_create(order = order , potency = potency)

@@ -8,6 +8,9 @@ class CartForm(forms.Form):
     potency.widget.attrs.update({'class':'form-control mb-3'})
     quantity.widget.attrs.update({'class': 'form-control mb-3'})
 
+class HomeCartForm(forms.Form):
+    potency = forms.IntegerField()
+
 class CartQuantityItem(forms.Form):
     potency = forms.IntegerField()
     btn = forms.IntegerField()

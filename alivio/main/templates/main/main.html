@@ -5,14 +5,6 @@
 {% block content %}
 <link rel="stylesheet" href="{% static 'main/index.css' %}"/>
 
-{% comment %} <div class="banner-container">
-	<div class="bg-image hover-zoom">
-	    <img src="{% static 'main/banner.jpg' %}" alt="banner" width="100%">
-    </div>
-    <div class="centered-banner">Welcome to Alivio</div>
-    <div class="belowcenter-banner"> Customers don't just want to shop: they want to feel that the brand understands them.</div>
-</div> {% endcomment %}
-
 <div class="hero-image">
     <div class="hero-container">
         <h1><span>Alivio</span></h1>
@@ -44,7 +36,11 @@
                                     {{ potencies.0.potency_value }}mg - {{ last_potency.potency_value }}mg
                                 </p>
                             {% endwith %}
-                            <a href="shopping-cart/{{ product.id }}" class="btn btn-primary add-to-cart">Add to Cart</a>
+                            <form action="{% url 'cart-home' %}" method="POST">
+                                {% csrf_token %}
+                                <input type="hidden" value="{{ potencies.0.id }}" name="potency">
+                                <button type="submit" class="btn btn-primary add-to-cart">Add to Cart</button>
+                            </form>
                         </div>
                     </div>
                 </a>    
