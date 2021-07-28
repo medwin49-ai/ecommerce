@@ -86,8 +86,7 @@
 						<a class="nav-link text-dark h7" href="#">Contact</a>
 					</li>
 					<li class="nav-item">
-						<a class="nav-link text-dark h7" href="{% url 'shopping-cart'%}">
-							Cart <i class="fas fa-shopping-cart fa-lg"></i>
+						<a class="nav-link text-dark h7" href="{% url 'shopping-cart'%}"><i class="fas fa-shopping-cart fa-lg"><span class="badge bg-primary rounded-pill">{{order_items}}</span></i>
 						</a>
 					</li>
 				</ul>
