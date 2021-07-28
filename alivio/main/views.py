@@ -8,14 +8,18 @@ def index(request):
     products = Product.objects.all()
     potencies = []
 
-    device = request.COOKIES['device']
-    customer, created = Customer.objects.get_or_create(device=device)
-    order, created = Order.objects.get_or_create(customer=customer, complete=False)
-
     for product in products:
         p = list(Potency.objects.filter(product_id=product.id).order_by('potency_value'))
         potencies.append(p)
+    
+    try:
+        device = request.COOKIES['device']
+        customer, created = Customer.objects.get_or_create(device=device)
+        order, created = Order.objects.get_or_create(customer=customer, complete=False)
+    except KeyError:
+        return render(request, "main/main.html", {'products': zip(products, potencies), 'order_items': 0 })
 
+    
     return render(request, "main/main.html", {'products': zip(products, potencies), 'order_items' : order.get_cart_items })
 
 
