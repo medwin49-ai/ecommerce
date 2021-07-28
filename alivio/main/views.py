@@ -8,11 +8,15 @@ def index(request):
     products = Product.objects.all()
     potencies = []
 
+    device = request.COOKIES['device']
+    customer, created = Customer.objects.get_or_create(device=device)
+    order, created = Order.objects.get_or_create(customer=customer, complete=False)
+
     for product in products:
         p = list(Potency.objects.filter(product_id=product.id).order_by('potency_value'))
         potencies.append(p)
 
-    return render(request, "main/main.html", {'products': zip(products, potencies)})
+    return render(request, "main/main.html", {'products': zip(products, potencies), 'order_items' : order.get_cart_items })
 
 
 def add_to_cart_from_home(request):
@@ -44,6 +48,7 @@ def product(request, product_name):
     product = get_object_or_404(Product , product_name=product_name)
     potencies = get_list_or_404(Potency , product_id = product.id ) 
     
+    
     choices = []
     for i in potencies:
         add_tuple = (i.id , str(i.potency_value) + "mg")
@@ -74,7 +79,10 @@ def product(request, product_name):
     else:
         form = CartForm()
         form.fields["potency"].choices = choices
-        return render(request, "main/product.html", { 'form':form, 'product': product, 'potencies': potencies,})
+        device = request.COOKIES['device']
+        customer, created = Customer.objects.get_or_create(device=device)
+        order, created = Order.objects.get_or_create(customer=customer, complete=False)
+        return render(request, "main/product.html", { 'form':form, 'product': product, 'potencies': potencies, 'order_items' : order.get_cart_items })
 
 
 def shopping_cart_page(response):
@@ -119,7 +127,7 @@ def shopping_cart_page(response):
         delete_form = DeleteButton()
     
         
-    return render(response, 'main/shopping-cart.html', {'order' : order , 'form' : form , 'delete_form' : delete_form, })
+    return render(response, 'main/shopping-cart.html', {'order' : order , 'form' : form , 'delete_form' : delete_form, 'order_items': order.get_cart_items })
 
 
 def checkout_page(response):
@@ -128,4 +136,4 @@ def checkout_page(response):
     order, created = Order.objects.get_or_create(customer=customer, complete=False)
 
         
-    return render(response, 'main/checkout.html', {'order' : order , })
+    return render(response, 'main/checkout.html', {'order' : order , 'order_items': order.get_cart_items})
