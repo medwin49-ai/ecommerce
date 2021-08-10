@@ -1,8 +1,12 @@
 from django.shortcuts import get_list_or_404, get_object_or_404, render, redirect ,reverse
-from django.http import HttpResponse ,  HttpResponseRedirect
+from django.http import JsonResponse ,  HttpResponseRedirect
 from .models import *
 from .forms import CartForm, CartQuantityItem, DeleteButton, HomeCartForm
 
+import json
+import stripe
+
+stripe.api_key = "sk_test_51JIK9kAAyihVYZDSlbuNLlhvytns9UEk7ASTnDaV11rrQZRU9DITci0BLkC3t0fVS66a6XzzImyFNhiG3MyNQkoZ008XQo17rd"
 
 def index(request):
     products = Product.objects.all()
@@ -20,7 +24,7 @@ def index(request):
         return render(request, "main/main.html", {'products': zip(products, potencies), 'order_items': 0 })
 
     
-    return render(request, "main/main.html", {'products': zip(products, potencies), 'order_items' : order.get_cart_items })
+    return render(request, "main/main.html", {'products': zip(products, potencies), 'order_items' : order.get_cart_quantity })
 
 
 def add_to_cart_from_home(request):
@@ -86,7 +90,7 @@ def product(request, product_name):
         device = request.COOKIES['device']
         customer, created = Customer.objects.get_or_create(device=device)
         order, created = Order.objects.get_or_create(customer=customer, complete=False)
-        return render(request, "main/product.html", { 'form':form, 'product': product, 'potencies': potencies, 'order_items' : order.get_cart_items })
+        return render(request, "main/product.html", { 'form':form, 'product': product, 'potencies': potencies, 'order_items' : order.get_cart_quantity })
 
 
 def shopping_cart_page(response):
@@ -131,7 +135,7 @@ def shopping_cart_page(response):
         delete_form = DeleteButton()
     
         
-    return render(response, 'main/shopping-cart.html', {'order' : order , 'form' : form , 'delete_form' : delete_form, 'order_items': order.get_cart_items })
+    return render(response, 'main/shopping-cart.html', {'order' : order , 'form' : form , 'delete_form' : delete_form, 'order_items': order.get_cart_quantity })
 
 
 def checkout_page(response):
@@ -140,4 +144,29 @@ def checkout_page(response):
     order, created = Order.objects.get_or_create(customer=customer, complete=False)
 
         
-    return render(response, 'main/checkout.html', {'order' : order , 'order_items': order.get_cart_items})
+    return render(response, 'main/checkout.html', {'order' : order , 'order_items': order.get_cart_quantity})
+
+
+def create_payment_intent(response):
+    try:
+        response_json = json.loads(response.body)
+        order = Order.objects.get(id=response_json['order'])
+
+        customer = stripe.Customer.create(email=response_json['email'], name=response_json['firstName'] + " " + response_json['lastName'])
+
+        intent = stripe.PaymentIntent.create(
+            amount=int(100 * order.get_cart_total),
+            currency='usd',
+            customer=customer['id'],
+            metadata={
+                "product_id": 1
+            }
+        )
+
+        return JsonResponse({
+            'clientSecret': intent['client_secret']
+        })
+
+    except Exception as e:
+        print(e)
+        return JsonResponse({ 'error': str(e) })
