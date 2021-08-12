@@ -8,4 +8,6 @@ urlpatterns = [
     path("add-cart-from-home", views.add_to_cart_from_home, name="cart-home"),
     path("checkout", views.checkout_page , name = "checkout"),
     path("create-payment-intent", views.create_payment_intent , name="payment-intent"),
+    path('webhooks/stripe', views.stripe_webhook, name='stripe-webhook'),
+    path('success' , views.success_page , name='success-page' ),
 ]

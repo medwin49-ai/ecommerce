@@ -2,7 +2,8 @@
  
 * {
     font-family: 'IBM Plex Serif', serif;
-    
+    margin: 0;
+    padding: 0;
 }
 
 
@@ -23,6 +24,7 @@ footer {
     margin-top: 15%;
     bottom: 0%;
     color: #fff
+    
 }
 
 
