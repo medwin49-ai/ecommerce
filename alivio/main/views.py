@@ -1,12 +1,15 @@
 from django.shortcuts import get_list_or_404, get_object_or_404, render, redirect ,reverse
-from django.http import JsonResponse ,  HttpResponseRedirect
+from django.http import JsonResponse ,  HttpResponseRedirect , HttpResponse
 from .models import *
 from .forms import CartForm, CartQuantityItem, DeleteButton, HomeCartForm
-
+from django.views.decorators.csrf import csrf_exempt
+from django.conf import settings
+import os
 import json
 import stripe
 
-stripe.api_key = "sk_test_51JIK9kAAyihVYZDSlbuNLlhvytns9UEk7ASTnDaV11rrQZRU9DITci0BLkC3t0fVS66a6XzzImyFNhiG3MyNQkoZ008XQo17rd"
+
+stripe.api_key = os.environ.get('STRIPE_SECRET_KEY')
 
 def index(request):
     products = Product.objects.all()
@@ -139,10 +142,13 @@ def shopping_cart_page(response):
 
 
 def checkout_page(response):
+    
     device = response.COOKIES['device']
     customer, created = Customer.objects.get_or_create(device=device)
     order, created = Order.objects.get_or_create(customer=customer, complete=False)
 
+    if order.complete == True:
+        return HttpResponseRedirect('')
         
     return render(response, 'main/checkout.html', {'order' : order , 'order_items': order.get_cart_quantity})
 
@@ -151,7 +157,7 @@ def create_payment_intent(response):
     try:
         response_json = json.loads(response.body)
         order = Order.objects.get(id=response_json['order'])
-
+        YOUR_DOMAIN = "http://127.0.0.1:8000/"
         customer = stripe.Customer.create(email=response_json['email'], name=response_json['firstName'] + " " + response_json['lastName'])
 
         intent = stripe.PaymentIntent.create(
@@ -159,14 +165,64 @@ def create_payment_intent(response):
             currency='usd',
             customer=customer['id'],
             metadata={
-                "product_id": 1
-            }
+                "device": response.COOKIES['device']
+            },
         )
+
 
         return JsonResponse({
             'clientSecret': intent['client_secret']
         })
 
+        
+        
+        
     except Exception as e:
         print(e)
         return JsonResponse({ 'error': str(e) })
+
+
+def success_page(response):
+    return render(response, 'main/success.html', {} )
+
+@csrf_exempt
+def stripe_webhook(request):
+
+
+    payload = request.body
+    sig_header = request.META['HTTP_STRIPE_SIGNATURE']
+    event = None
+    try:
+        event = stripe.Webhook.construct_event(
+            payload, sig_header, settings.STRIPE_WEBHOOK_SECRET
+        )
+    except ValueError as e:
+        # Invalid payload
+        return HttpResponse(status=400)
+    except stripe.error.SignatureVerificationError as e:
+        # Invalid signature
+        return HttpResponse(status=400)
+      # Handle the checkout.session.completed event
+    # if event['type'] == 'checkout.session.completed':
+    if event.type == 'payment_intent.succeeded':
+        payment_intent = event.data.object # contains a stripe.PaymentIntent
+        print('PaymentIntent was successful!')
+        event_dict = event.to_dict()
+        intent = event_dict['data']['object']
+        device = intent['charges']['data'][0]['metadata']['device']
+        customer, created = Customer.objects.get_or_create(device=device)
+        order, created = Order.objects.get_or_create(customer=customer, complete=False)
+        order.complete = True
+        order.save()
+        print(order.complete)
+
+        return redirect('shopping-cart')
+        # session = event['data']['object']
+        # customer_email = session["customer_details"]["email"]
+        # product_id = session["metadata"]["product_id"]
+        # product = Product.objects.get(id=product_id)
+        # TODO - send an email and make oder complete.
+
+    return HttpResponse(status=200)
+
+
