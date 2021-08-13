@@ -147,8 +147,8 @@ def checkout_page(response):
     customer, created = Customer.objects.get_or_create(device=device)
     order, created = Order.objects.get_or_create(customer=customer, complete=False)
 
-    if order.complete == True:
-        return HttpResponseRedirect('')
+    if order.get_cart_total == 0:
+        return HttpResponseRedirect('/shopping-cart')
         
     return render(response, 'main/checkout.html', {'order' : order , 'order_items': order.get_cart_quantity})
 
