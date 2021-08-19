@@ -1,9 +1,10 @@
 from django.shortcuts import get_list_or_404, get_object_or_404, render, redirect ,reverse
 from django.http import JsonResponse ,  HttpResponseRedirect , HttpResponse
 from .models import *
-from .forms import CartForm, CartQuantityItem, DeleteButton, HomeCartForm
+from .forms import *
 from django.views.decorators.csrf import csrf_exempt
 from django.conf import settings
+from django.utils import timezone
 import os
 import json
 import stripe
@@ -149,7 +150,8 @@ def checkout_page(response):
 
     if order.get_cart_total == 0:
         return HttpResponseRedirect('/shopping-cart')
-        
+    
+
     return render(response, 'main/checkout.html', {'order' : order , 'order_items': order.get_cart_quantity})
 
 
@@ -183,12 +185,22 @@ def create_payment_intent(response):
 
 
 def success_page(response):
-    return render(response, 'main/success.html', {} )
+    
+
+    if response.method == 'POST': 
+
+        form = SuccessForm(response.POST)
+        if form.is_valid():
+            order_id = form.cleaned_data['order_id']
+            order = Order.objects.get(pk = order_id)
+
+            return render(response , 'main/success.html' , {'order' : order})
+
+    
+    return HttpResponseRedirect('/')
 
 @csrf_exempt
 def stripe_webhook(request):
-
-
     payload = request.body
     sig_header = request.META['HTTP_STRIPE_SIGNATURE']
     event = None
@@ -206,22 +218,17 @@ def stripe_webhook(request):
     # if event['type'] == 'checkout.session.completed':
     if event.type == 'payment_intent.succeeded':
         payment_intent = event.data.object # contains a stripe.PaymentIntent
-        print('PaymentIntent was successful!')
+
         event_dict = event.to_dict()
         intent = event_dict['data']['object']
         device = intent['charges']['data'][0]['metadata']['device']
-        customer, created = Customer.objects.get_or_create(device=device)
-        order, created = Order.objects.get_or_create(customer=customer, complete=False)
+        customer = Customer.objects.get(device=device)
+        order = Order.objects.get(customer=customer, complete=False)
         order.complete = True
+        order.date_ordered = timezone.now()
         order.save()
-        print(order.complete)
 
-        return redirect('shopping-cart')
-        # session = event['data']['object']
-        # customer_email = session["customer_details"]["email"]
-        # product_id = session["metadata"]["product_id"]
-        # product = Product.objects.get(id=product_id)
-        # TODO - send an email and make oder complete.
+
 
     return HttpResponse(status=200)
 
