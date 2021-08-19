@@ -4,6 +4,12 @@
 
 {% block content %}
 
+<script
+  src="https://code.jquery.com/jquery-3.6.0.js"
+  integrity="sha256-H+K7U5CnXl1h5ywQfKtSj8PCmoN9aaq30gDh27Xc0jk="
+  crossorigin="anonymous">
+</script>
+
 <link rel="stylesheet" href="{% static 'main/checkout.css' %}">
 
 <script src="https://js.stripe.com/v3/"></script>
@@ -142,5 +148,10 @@
 <script>
   var globalVars = {'order': {{ order.id }} }
 </script>
+
+<form action="{% url 'success-page' %}" method="POST" id="success_form" name="form">
+  {% csrf_token %}
+  <input type="hidden" name="order_id" value={{ order.id }} >
+</form>
 <script src="{% static 'main/checkout.js' %}"></script>
 {% endblock %}

@@ -1,4 +1,5 @@
 // Example starter JavaScript for disabling form submissions if there are invalid fields
+
 (function () {
     'use strict'
   
@@ -109,8 +110,18 @@ var payWithCard = function(stripe, card, clientSecret) {
 
 // Shows a success message when the payment is complete
 var orderComplete = function(paymentIntentId) {
+  
   loading(false);
-  window.location.replace('\\success');
+  
+  // var url = '/success';
+  // var form = $('<form action="' + url + '" method="post">' +
+  // '<input type="hidden" name="api_url" value="' + Return_URL + '" />' +
+  // '</form>');
+  // $('body').append(form);
+  // form.submit();
+
+  document.getElementById('success_form').submit();
+
 };
 
 // Show the customer the error from Stripe if their card fails to charge

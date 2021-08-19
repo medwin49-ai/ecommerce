@@ -1,5 +1,6 @@
 from django import forms
 from django.forms import ModelForm
+from django.forms.widgets import HiddenInput
 from .models import *
 
 class CartForm(forms.Form):
@@ -17,3 +18,6 @@ class CartQuantityItem(forms.Form):
 
 class DeleteButton(forms.Form):
     potency = forms.IntegerField()
+
+class SuccessForm(forms.Form):
+    order_id = forms.CharField()
