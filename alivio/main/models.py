@@ -1,4 +1,5 @@
 from django.db import models
+import stripe
 
 
 class Product(models.Model):
@@ -30,6 +31,7 @@ class Customer(models.Model):
 	name = models.CharField(max_length=200, null=True, blank=True)
 	email = models.CharField(max_length=200, null=True, blank=True)
 	device = models.CharField(max_length=200, null=True, blank=True)
+	stripe_id = models.CharField(max_length=200, null=True, blank=True)
 
 	def __str__(self):
 		if self.name:

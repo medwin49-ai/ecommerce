@@ -68,9 +68,14 @@ form.addEventListener("submit", function(event) {
       'X-CSRFToken': csrftoken
     },
     body: JSON.stringify({
-      email: document.getElementById('email').value,
       firstName: document.getElementById('firstName').value,
       lastName: document.getElementById('lastName').value,
+      email: document.getElementById('email').value,
+      address1: document.getElementById('address').value,
+      address2: document.getElementById('address2').value,
+      city: document.getElementById('city').value,
+      state: document.getElementById('state').value,
+      zip: document.getElementById('zip').value,
       order: globalVars['order']
     })
   })
