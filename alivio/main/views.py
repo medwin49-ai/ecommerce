@@ -159,16 +159,52 @@ def create_payment_intent(response):
     try:
         response_json = json.loads(response.body)
         order = Order.objects.get(id=response_json['order'])
-        YOUR_DOMAIN = "http://127.0.0.1:8000/"
-        customer = stripe.Customer.create(email=response_json['email'], name=response_json['firstName'] + " " + response_json['lastName'])
+        device = response.COOKIES['device']
+
+        customerName = response_json['firstName'].strip() + " " + response_json['lastName'].strip()
+
+        customer_id = None
+
+        # Try to find exsisting customer. If found, update device field with current device.
+        try:
+            customer = Customer.objects.get(name=customerName, email=response_json['email'].strip())
+            oldCustomer = Customer.objects.get(device=device)
+
+            customer.device = oldCustomer.device
+            order.customer = customer
+
+            customer.save()
+            order.save()
+            oldCustomer.delete()
+
+            customer_id = customer.stripe_id
+
+        # Exsisting customer was not found, update current customer placeholder with correct information
+        except Customer.DoesNotExist:
+            customer = stripe.Customer.create(
+                email = response_json['email'].strip(), 
+                name = customerName,
+                shipping = {'address': {'city': response_json['city'].strip(), 'country': 'US',
+                                        'line1': response_json['address1'].strip(), 'line2': response_json['address2'].strip(),
+                                        'postal_code': response_json['zip'].strip(), 'state': response_json['state'].strip()},
+                            'name': customerName}
+            )
+
+            updateCustomer = Customer.objects.get(device=device)
+            updateCustomer.name = customerName
+            updateCustomer.email = response_json['email'].strip()
+            updateCustomer.stripe_id = customer['id']
+            updateCustomer.save()
+
+            customer_id = customer['id']
 
         intent = stripe.PaymentIntent.create(
-            amount=int(100 * order.get_cart_total),
-            currency='usd',
-            customer=customer['id'],
-            metadata={
+            amount = int(100 * order.get_cart_total),
+            currency = 'usd',
+            customer = customer_id,
+            metadata = {
                 "device": response.COOKIES['device']
-            },
+            }
         )
 
 
@@ -177,10 +213,8 @@ def create_payment_intent(response):
         })
 
         
-        
-        
     except Exception as e:
-        print(e)
+        print("Error in create_payment_intent: " + e)
         return JsonResponse({ 'error': str(e) })
 
 
