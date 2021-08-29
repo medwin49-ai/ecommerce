@@ -8,6 +8,8 @@ from django.utils import timezone
 import os
 import json
 import stripe
+import yagmail
+
 
 
 stripe.api_key = os.environ.get('STRIPE_SECRET_KEY')
@@ -262,6 +264,12 @@ def stripe_webhook(request):
         order.date_ordered = timezone.now()
         order.save()
 
+        # Send Email
+
+        # yag = yagmail.SMTP('eddeyisthebest@gmail.com' , 'mendoza121895')
+
+        # yag.send(to = 'm.edwin49@gmail.com' , subject = "Order Number:" + order.id , content = "Did it work?" )
+        # print("Email sent Succesfully")
 
 
     return HttpResponse(status=200)

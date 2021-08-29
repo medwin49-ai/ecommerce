@@ -1,0 +1,1 @@
+web: gunicorn alivio.alivio.wsgi
