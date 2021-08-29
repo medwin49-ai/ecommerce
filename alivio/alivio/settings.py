@@ -12,9 +12,9 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = os.environ.get('ALIVIO_SECERET_KEY')
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = False
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['https://alivioproduct.herokuapp.com/' , '127.0.0.1']
 
 STATICFILES_DIRS = [os.path.join(BASE_DIR, "static")]
 # Application definition
