@@ -2,7 +2,7 @@
 
 # How to populate tables
 
-Run: **python manage.py populatedb --filepath [path_to_file] --table [table_to_populate]**
+Run: **python manage.py populatedb --file_path [path_to_file] --table [table_to_populate]**
 
 [path_to_file] must be a file that follows the below formats for a given table.
 <br>
