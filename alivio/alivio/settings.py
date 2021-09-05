@@ -14,7 +14,8 @@ SECRET_KEY = os.environ.get('ALIVIO_SECERET_KEY')
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['alivioproduct.herokuapp.com' , '127.0.0.1']
+ALLOWED_HOSTS = False
+#['alivioproduct.herokuapp.com' , '127.0.0.1']
 
 STATICFILES_DIRS = [os.path.join(BASE_DIR, "static")]
 # Application definition
