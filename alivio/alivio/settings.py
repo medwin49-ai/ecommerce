@@ -69,10 +69,10 @@ WSGI_APPLICATION = 'alivio.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql',
-        'NAME': 'alivio',
+        'NAME': 'alivio', # os.environ.get('DB_NAME')
         'USER': os.environ.get('DB_USER'),
         'PASSWORD': os.environ.get('DB_PASS'),
-        'HOST': '', # localhost
+        'HOST': '' , # localhost os.environ.get('HOST')
         'PORT': '3306',
     }
 }
