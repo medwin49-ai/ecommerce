@@ -14,8 +14,7 @@ SECRET_KEY = os.environ.get('ALIVIO_SECERET_KEY')
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = False
-# ['https://alivioproduct.herokuapp.com/' , '127.0.0.1']
+ALLOWED_HOSTS = ['alivioproduct.herokuapp.com' , '127.0.0.1']
 
 STATICFILES_DIRS = [os.path.join(BASE_DIR, "static")]
 # Application definition
@@ -69,10 +68,10 @@ WSGI_APPLICATION = 'alivio.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql',
-        'NAME': 'alivio', # os.environ.get('DB_NAME')
+        'NAME': os.environ.get('DB_NAME'),
         'USER': os.environ.get('DB_USER'),
         'PASSWORD': os.environ.get('DB_PASS'),
-        'HOST': '' , # localhost os.environ.get('HOST')
+        'HOST': localhost os.environ.get('HOST'),
         'PORT': '3306',
     }
 }
