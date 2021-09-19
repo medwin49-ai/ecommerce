@@ -37,7 +37,9 @@
                             <tbody>
                                 {% for item in order.orderitem_set.all %}
                                     <tr>
-                                        <td width="20%"> <img src="https://i.imgur.com/u11K1qd.jpg" width="90"> </td>
+                                        {% if item.potency.product.image.url %}
+                                        <td width="20%"> <img src="{{ item.potency.product.image.url }}" width="90"> </td>
+                                        {% endif %}
                                         <td width="60%"> <span class="font-weight-bold">{{ item.potency.product.product_name|title }}</span>
                                             <div class="product-qty"> <span class="d-block">Quantity: {{item.quantity}}</span> <span>Potency: {{ item.potency.potency_value }}mg</span> </div>
                                         </td>
@@ -61,28 +63,28 @@
                                             <div class="text-right"> <span>${{ order.get_cart_total }}</span> </div>
                                         </td>
                                     </tr>
-                                    <tr>
+                                    <!-- <tr>
                                         <td>
                                             <div class="text-left"> <span class="text-muted">Shipping Fee</span> </div>
                                         </td>
                                         <td>
                                             <div class="text-right"> <span>$22</span> </div>
                                         </td>
-                                    </tr>
-                                    <tr>
+                                    </tr> -->
+                                    <!-- <tr>
                                         <td>
                                             <div class="text-left"> <span class="text-muted">Tax Fee</span> </div>
                                         </td>
                                         <td>
                                             <div class="text-right"> <span>$7.65</span> </div>
                                         </td>
-                                    </tr>
+                                    </tr> -->
                                     <tr class="border-top border-bottom">
                                         <td>
                                             <div class="text-left"> <span class="font-weight-bold">Subtotal</span> </div>
                                         </td>
                                         <td>
-                                            <div class="text-right"> <span class="font-weight-bold">$238.50</span> </div>
+                                            <div class="text-right"> <span class="font-weight-bold">${{ order.get_cart_total }}</span> </div>
                                         </td>
                                     </tr>
                                 </tbody>

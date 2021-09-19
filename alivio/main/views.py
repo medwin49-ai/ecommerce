@@ -22,10 +22,15 @@ def index(request):
         p = list(Potency.objects.filter(product_id=product.id).order_by('potency_value'))
         potencies.append(p)
     
+
     try:
         device = request.COOKIES['device']
         customer, created = Customer.objects.get_or_create(device=device)
-        order, created = Order.objects.get_or_create(customer=customer, complete=False)
+        order, created = Order.objects.get_or_create(customer=customer , complete=False)
+
+        print(order)
+
+    
     except KeyError:
         return render(request, "main/main.html", {'products': zip(products, potencies), 'order_items': 0 })
 
@@ -159,6 +164,7 @@ def checkout_page(response):
 
 def create_payment_intent(response):
     try:
+        print("HEY ARE YOU GOING THROUGH")
         response_json = json.loads(response.body)
         order = Order.objects.get(id=response_json['order'])
         device = response.COOKIES['device']

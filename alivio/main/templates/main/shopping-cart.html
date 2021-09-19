@@ -24,7 +24,9 @@
             <tbody>
                 {% for item in order.orderitem_set.all %}
                 <tr>
-                    <td><img class="img-fluid" src="{% static 'main/1.jpg' %}" alt="" style="border: 0px none;" width="50px">{{ item.potency.product.product_name|title }} - {{ item.potency.potency_value }}mg</td>
+                    {% if item.potency.product.image %}
+                    <td><img class="img-fluid" src="{{ item.potency.product.image.url }}" alt="" style="border: 0px none;" width="50px">{{ item.potency.product.product_name|title }} - {{ item.potency.potency_value }}mg</td>
+                    {% endif %}
                     <td>${{ item.potency.price|floatformat:2 }}</td>
                     <td>
                         
