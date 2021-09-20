@@ -26,8 +26,10 @@
             {% for item in order.orderitem_set.all %}
                 <li class="list-group-item d-flex justify-content-between lh-sm">
                 <div>
-                    <h6 class="my-0">{{ item.potency.product.product_name|title }} - {{ item.potency.potency_value }}mg x {{ item.quantity }}</h6>
-                    <small class="text-muted">Brief description</small>
+                    {% if item.potency.product.image %}
+                      <h6 class="my-0"><img  class="img-fluid" src="{{ item.potency.product.image.url }} " alt="{{item.potency.product.image.url }}" style="border: 0px none;" width="60px">{{ item.potency.product.product_name|title }} - {{ item.potency.potency_value }}mg x {{ item.quantity }}</h6>
+                    {% endif %}
+                    <!-- <small class="text-muted">Brief description</small> -->
                 </div>
                 <span class="text-muted"> ${{ item.get_total|floatformat:2 }} </span>
                 </li>

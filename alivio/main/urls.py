@@ -1,6 +1,7 @@
 from django.urls import  path
 from . import views
-
+from django.conf.urls.static import static
+from django.conf import settings
 urlpatterns = [
     path("" , views.index , name="index"),
     path("products/<str:product_name>" , views.product, name="products" ),
@@ -10,4 +11,4 @@ urlpatterns = [
     path("create-payment-intent", views.create_payment_intent , name="payment-intent"),
     path('webhooks/stripe', views.stripe_webhook, name='stripe-webhook'),
     path('success' , views.success_page , name='success-page' ),
-]
+] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
